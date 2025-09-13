@@ -1,6 +1,8 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Play, Sparkles, TrendingUp, Shield } from 'lucide-react';
+import CheckoutButton from './CheckoutButton';
+import { PRODUCTS } from '../config/stripe';
 
 const Hero = () => {
   return (
@@ -47,10 +49,14 @@ const Hero = () => {
             transition={{ duration: 0.6, delay: 0.3 }}
             className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12"
           >
-            <button className="btn-primary text-lg px-8 py-3 flex items-center group">
+            <CheckoutButton
+              priceId={PRODUCTS.pro.priceId}
+              planName={PRODUCTS.pro.name}
+              className="btn-primary text-lg px-8 py-3 flex items-center group"
+            >
               <Play className="h-5 w-5 mr-2 group-hover:scale-110 transition-transform" />
               Start Free Trial
-            </button>
+            </CheckoutButton>
             <button className="btn-secondary text-lg px-8 py-3">
               Watch Demo
             </button>

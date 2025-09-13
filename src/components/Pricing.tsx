@@ -1,57 +1,30 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Check, Star, Zap } from 'lucide-react';
+import CheckoutButton from './CheckoutButton';
+import { PRODUCTS } from '../config/stripe';
 
 const Pricing = () => {
   const plans = [
     {
-      name: 'Starter',
-      price: '0',
+      ...PRODUCTS.starter,
       period: 'Free Forever',
       description: 'Perfect for trying out VideoAI',
-      features: [
-        '5 video analyses per month',
-        'Basic object detection',
-        'Standard processing speed',
-        'Email support',
-        '720p video support'
-      ],
       buttonText: 'Get Started Free',
       popular: false
     },
     {
-      name: 'Pro',
-      price: '9.90',
+      ...PRODUCTS.pro,
       period: 'per month',
       description: 'Best value for professionals',
-      features: [
-        'Unlimited video analyses',
-        'Advanced AI features',
-        'Priority processing',
-        '24/7 chat support',
-        '4K video support',
-        'Custom model training',
-        'Team collaboration',
-        'API access'
-      ],
       buttonText: 'Start Free Trial',
       popular: true
     },
     {
-      name: 'Enterprise',
+      ...PRODUCTS.enterprise,
       price: 'Custom',
       period: 'Contact us',
       description: 'For large organizations',
-      features: [
-        'Everything in Pro',
-        'Dedicated infrastructure',
-        'Custom integrations',
-        'SLA guarantees',
-        'On-premise deployment',
-        'Advanced security',
-        'Training & onboarding',
-        'Account manager'
-      ],
       buttonText: 'Contact Sales',
       popular: false
     }
@@ -107,10 +80,12 @@ const Pricing = () => {
                 <div className="mb-4">
                   {plan.price === 'Custom' ? (
                     <div className="text-3xl font-bold text-secondary-900">{plan.price}</div>
+                  ) : plan.price === 0 ? (
+                    <div className="text-4xl font-bold text-secondary-900">Free</div>
                   ) : (
                     <div className="flex items-baseline justify-center">
                       <span className="text-4xl font-bold text-secondary-900">€{plan.price}</span>
-                      {plan.price !== '0' && (
+                      {plan.price !== 0 && (
                         <span className="text-secondary-600 ml-2">/{plan.period.split(' ')[1]}</span>
                       )}
                     </div>
@@ -128,15 +103,36 @@ const Pricing = () => {
                 ))}
               </ul>
 
-              <button
-                className={`w-full py-3 px-6 rounded-lg font-semibold transition-all duration-200 ${
-                  plan.popular
-                    ? 'bg-primary-600 hover:bg-primary-700 text-white'
-                    : 'bg-secondary-100 hover:bg-secondary-200 text-secondary-900'
-                }`}
-              >
-                {plan.buttonText}
-              </button>
+              {plan.priceId ? (
+                <CheckoutButton
+                  priceId={plan.priceId}
+                  planName={plan.name}
+                  className={`w-full py-3 px-6 rounded-lg font-semibold transition-all duration-200 ${
+                    plan.popular
+                      ? 'bg-primary-600 hover:bg-primary-700 text-white'
+                      : 'bg-secondary-100 hover:bg-secondary-200 text-secondary-900'
+                  }`}
+                >
+                  {plan.buttonText}
+                </CheckoutButton>
+              ) : (
+                <button
+                  className={`w-full py-3 px-6 rounded-lg font-semibold transition-all duration-200 ${
+                    plan.popular
+                      ? 'bg-primary-600 hover:bg-primary-700 text-white'
+                      : 'bg-secondary-100 hover:bg-secondary-200 text-secondary-900'
+                  }`}
+                  onClick={() => {
+                    if (plan.name === 'Starter') {
+                      window.location.href = '/dashboard';
+                    } else {
+                      alert('Contact our sales team for enterprise pricing!');
+                    }
+                  }}
+                >
+                  {plan.buttonText}
+                </button>
+              )}
             </motion.div>
           ))}
         </div>
